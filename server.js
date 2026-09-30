@@ -5,7 +5,10 @@ import multer from "multer";
 dotenv.config();
 
 const app = express();
+
+// Render के लिए PORT
 const PORT = process.env.PORT || 3000;
+
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
@@ -18,17 +21,18 @@ app.use(express.static("public"));
 app.post("/api/generate", upload.single("image"), async (req, res) => {
   try {
     const prompt = req.body?.prompt;
-if (!prompt) {
-  return res.status(400).json({
-    error: "Please enter a prompt."
-  });
-}
-   
+
+    if (!prompt) {
+      return res.status(400).json({
+        error: "Please enter a prompt."
+      });
+    }
+
     const apiKey = process.env.POLLINATIONS_API_KEY;
 
     if (!apiKey) {
       return res.status(500).json({
-        error: "API key is missing in .env"
+        error: "API key is missing in environment variables."
       });
     }
 
@@ -41,9 +45,18 @@ if (!prompt) {
         { type: req.file.mimetype }
       );
 
-      formData.append("image", imageBlob, req.file.originalname);
+      formData.append(
+        "image",
+        imageBlob,
+        req.file.originalname
+      );
+
       formData.append("prompt", prompt);
-      formData.append("model", "black-forest-labs/flux.1-kontext-pro");
+
+      formData.append(
+        "model",
+        "black-forest-labs/flux.1-kontext-pro"
+      );
 
       const response = await fetch(
         "https://gen.pollinations.ai/v1/images/edits",
@@ -59,7 +72,10 @@ if (!prompt) {
       if (!response.ok) {
         const errorText = await response.text();
 
-        console.error("Pollinations edit error:", errorText);
+        console.error(
+          "Pollinations edit error:",
+          errorText
+        );
 
         return res.status(response.status).json({
           error: "Image editing failed: " + errorText
@@ -81,7 +97,7 @@ if (!prompt) {
       });
     }
 
-    // NORMAL TEXT-TO-IMAGE MODE
+    // TEXT TO IMAGE MODE
     const imageUrl =
       "https://gen.pollinations.ai/image/" +
       encodeURIComponent(prompt) +
@@ -96,13 +112,19 @@ if (!prompt) {
     if (!response.ok) {
       const errorText = await response.text();
 
+      console.error(
+        "Pollinations generation error:",
+        errorText
+      );
+
       return res.status(response.status).json({
         error: "Image generation failed: " + errorText
       });
     }
 
     const contentType =
-      response.headers.get("content-type") || "image/jpeg";
+      response.headers.get("content-type") ||
+      "image/jpeg";
 
     const imageBuffer =
       Buffer.from(await response.arrayBuffer());
@@ -115,20 +137,17 @@ if (!prompt) {
     });
 
   } catch (error) {
-    console.error(error);
+    console.error("Server error:", error);
 
-    res.status(500).json({
+    return res.status(500).json({
       error: error.message || "Image generation failed."
     });
   }
 });
 
-const PORT = process.env.PORT || 3000;
-
+// Server start
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`🚀 My AI Image Generator running on port ${PORT}`);
-});
   console.log(
-    `🚀 My AI Image Generator running at http://localhost:${PORT}`
+    `🚀 My AI Image Generator running on port ${PORT}`
   );
 });
