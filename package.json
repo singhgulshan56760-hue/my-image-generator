@@ -1,0 +1,13 @@
+{
+  "name": "my-image-generator",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.4",
+    "express": "^5.1.0",
+    "multer": "^2.4.0"
+  }
+}

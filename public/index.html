@@ -1,0 +1,1424 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Liquid AI Studio</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --glass:rgba(255,255,255,0.09);
+    --glass-border:rgba(255,255,255,0.16);
+    --text:#ffffff;
+    --muted:#a9b2c7;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    min-height:100vh;
+    font-family:Inter,Arial,sans-serif;
+    color:var(--text);
+    overflow-x:hidden;
+
+    background:
+        radial-gradient(circle at 15% 20%,rgba(100,80,255,.35),transparent 28%),
+        radial-gradient(circle at 85% 25%,rgba(0,220,255,.25),transparent 30%),
+        radial-gradient(circle at 50% 90%,rgba(255,0,150,.18),transparent 30%),
+        #050611;
+}
+
+
+/* =========================
+   LIQUID BLOBS
+========================= */
+
+.blob{
+    position:fixed;
+    border-radius:50%;
+    filter:blur(80px);
+    opacity:.45;
+    pointer-events:none;
+    z-index:-1;
+
+    animation:float 12s ease-in-out infinite alternate;
+}
+
+.blob.one{
+    width:300px;
+    height:300px;
+    background:#7c3cff;
+    top:-80px;
+    left:-80px;
+}
+
+.blob.two{
+    width:350px;
+    height:350px;
+    background:#00d9ff;
+    right:-100px;
+    top:35%;
+    animation-delay:2s;
+}
+
+.blob.three{
+    width:280px;
+    height:280px;
+    background:#ff2ba6;
+    bottom:-100px;
+    left:35%;
+    animation-delay:4s;
+}
+
+@keyframes float{
+
+    from{
+        transform:translate(0,0) scale(1);
+    }
+
+    to{
+        transform:translate(70px,-50px) scale(1.2);
+    }
+
+}
+
+
+/* =========================
+   MAIN CONTAINER
+========================= */
+
+.container{
+    width:min(1200px,94%);
+    margin:auto;
+    padding:35px 0 50px;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:35px;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.logo-icon{
+    width:48px;
+    height:48px;
+    border-radius:16px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:24px;
+
+    background:linear-gradient(
+        135deg,
+        rgba(255,255,255,.25),
+        rgba(255,255,255,.05)
+    );
+
+    border:1px solid var(--glass-border);
+
+    box-shadow:
+        inset 0 1px 1px rgba(255,255,255,.3),
+        0 10px 40px rgba(0,0,0,.25);
+}
+
+.logo h1{
+    font-size:20px;
+}
+
+.logo span{
+    display:block;
+    font-size:12px;
+    color:var(--muted);
+    margin-top:3px;
+}
+
+.status{
+    padding:9px 14px;
+    border-radius:30px;
+
+    background:rgba(255,255,255,.07);
+    border:1px solid var(--glass-border);
+
+    font-size:12px;
+    color:#bdfecf;
+
+    box-shadow:
+        inset 0 1px 1px rgba(255,255,255,.08);
+}
+
+
+/* =========================
+   HERO
+========================= */
+
+.hero{
+    text-align:center;
+    margin:40px 0;
+}
+
+.hero h2{
+    font-size:clamp(38px,7vw,76px);
+    line-height:1;
+    letter-spacing:-4px;
+
+    background:linear-gradient(
+        90deg,
+        #fff,
+        #9ee8ff,
+        #d8a7ff,
+        #fff
+    );
+
+    background-size:300%;
+
+    -webkit-background-clip:text;
+    background-clip:text;
+
+    color:transparent;
+
+    animation:shine 6s linear infinite;
+}
+
+@keyframes shine{
+
+    0%{
+        background-position:0%;
+    }
+
+    100%{
+        background-position:300%;
+    }
+
+}
+
+.hero p{
+    color:var(--muted);
+    max-width:600px;
+    margin:18px auto 0;
+    line-height:1.7;
+    font-size:14px;
+}
+
+
+/* =========================
+   WORKSPACE
+========================= */
+
+.workspace{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:22px;
+}
+
+
+/* =========================
+   GLASS CARD
+========================= */
+
+.card{
+    position:relative;
+
+    background:rgba(255,255,255,.075);
+
+    border:1px solid var(--glass-border);
+
+    border-radius:30px;
+
+    padding:24px;
+
+    backdrop-filter:blur(25px);
+    -webkit-backdrop-filter:blur(25px);
+
+    box-shadow:
+        inset 0 1px 1px rgba(255,255,255,.15),
+        0 30px 80px rgba(0,0,0,.25);
+
+    overflow:hidden;
+}
+
+.card::before{
+    content:"";
+
+    position:absolute;
+
+    top:0;
+    left:10%;
+
+    width:80%;
+    height:1px;
+
+    background:linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.6),
+        transparent
+    );
+}
+
+.card-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:20px;
+}
+
+.card-title h3{
+    font-size:18px;
+}
+
+.card-title span{
+    font-size:12px;
+    color:#8e9ab3;
+}
+
+
+/* =========================
+   UPLOAD
+========================= */
+
+.upload{
+    min-height:260px;
+
+    border:1px dashed rgba(255,255,255,.25);
+
+    border-radius:22px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-align:center;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.upload:hover{
+    background:rgba(255,255,255,.06);
+
+    border-color:
+        rgba(255,255,255,.55);
+
+    transform:translateY(-2px);
+}
+
+.upload-icon{
+    font-size:50px;
+    margin-bottom:12px;
+}
+
+.upload p{
+    color:#c2cada;
+    font-size:14px;
+}
+
+.upload small{
+    color:#707b91;
+    display:block;
+    margin-top:8px;
+}
+
+#imageInput{
+    display:none;
+}
+
+.preview{
+    display:none;
+    position:relative;
+}
+
+.preview img{
+    width:100%;
+    max-height:390px;
+
+    object-fit:contain;
+
+    border-radius:20px;
+
+    display:block;
+
+    background:#050611;
+}
+
+.change{
+    position:absolute;
+
+    right:12px;
+    bottom:12px;
+
+    padding:8px 13px;
+
+    border-radius:20px;
+
+    background:rgba(0,0,0,.55);
+
+    backdrop-filter:blur(10px);
+
+    border:1px solid rgba(255,255,255,.15);
+
+    color:white;
+
+    cursor:pointer;
+}
+
+
+/* =========================
+   PROMPT
+========================= */
+
+.prompt-wrap{
+    position:relative;
+}
+
+textarea{
+    width:100%;
+    min-height:180px;
+
+    resize:none;
+
+    padding:20px;
+
+    color:white;
+
+    font-size:15px;
+
+    line-height:1.6;
+
+    border-radius:22px;
+
+    outline:none;
+
+    background:rgba(0,0,0,.2);
+
+    border:1px solid rgba(255,255,255,.12);
+
+    transition:.3s;
+}
+
+textarea:focus{
+    border-color:
+        rgba(150,180,255,.6);
+
+    box-shadow:
+        0 0 0 4px
+        rgba(100,120,255,.08);
+}
+
+textarea::placeholder{
+    color:#68738a;
+}
+
+
+/* =========================
+   PROMPT CHIPS
+========================= */
+
+.chips{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:12px;
+}
+
+.chip{
+    padding:8px 12px;
+
+    border-radius:20px;
+
+    background:rgba(255,255,255,.06);
+
+    border:1px solid rgba(255,255,255,.1);
+
+    color:#b9c3d8;
+
+    font-size:12px;
+
+    cursor:pointer;
+
+    transition:.25s;
+}
+
+.chip:hover{
+    background:rgba(255,255,255,.13);
+
+    color:white;
+
+    transform:translateY(-1px);
+}
+
+
+/* =========================
+   GENERATE BUTTON
+========================= */
+
+.generate{
+    width:100%;
+
+    margin-top:20px;
+
+    padding:17px;
+
+    border:none;
+
+    border-radius:20px;
+
+    color:white;
+
+    font-size:16px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    background:
+        linear-gradient(
+            110deg,
+            #7c3cff,
+            #00bfff,
+            #d52cff
+        );
+
+    background-size:250%;
+
+    box-shadow:
+        0 15px 40px
+        rgba(90,80,255,.25);
+
+    transition:.3s;
+
+    animation:
+        buttonGlow 5s linear infinite;
+}
+
+@keyframes buttonGlow{
+
+    0%{
+        background-position:0%;
+    }
+
+    100%{
+        background-position:250%;
+    }
+
+}
+
+.generate:hover{
+
+    transform:
+        translateY(-2px)
+        scale(1.01);
+
+    box-shadow:
+        0 20px 55px
+        rgba(100,100,255,.4);
+}
+
+.generate:active{
+    transform:scale(.98);
+}
+
+.generate:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+}
+
+
+/* =========================
+   RESULT
+========================= */
+
+.result{
+    grid-column:1/-1;
+}
+
+.result-box{
+    min-height:420px;
+
+    border-radius:25px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.04),
+            rgba(0,0,0,.2)
+        );
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    overflow:hidden;
+
+    position:relative;
+}
+
+.empty{
+    text-align:center;
+    color:#626d82;
+}
+
+.empty-icon{
+    font-size:60px;
+    opacity:.5;
+    margin-bottom:12px;
+}
+
+#resultImage{
+    max-width:100%;
+    max-height:650px;
+
+    border-radius:20px;
+
+    display:none;
+
+    box-shadow:
+        0 20px 70px
+        rgba(0,0,0,.5);
+}
+
+
+/* =========================
+   DOWNLOAD
+========================= */
+
+.download{
+    display:none;
+
+    margin-top:18px;
+
+    padding:13px 20px;
+
+    border-radius:15px;
+
+    background:rgba(255,255,255,.1);
+
+    border:1px solid rgba(255,255,255,.15);
+
+    color:white;
+
+    text-decoration:none;
+
+    font-size:14px;
+
+    transition:.3s;
+}
+
+.download:hover{
+    background:rgba(255,255,255,.18);
+
+    transform:translateY(-2px);
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+#status{
+    text-align:center;
+
+    margin-top:15px;
+
+    color:#aeb8cb;
+
+    font-size:13px;
+
+    min-height:20px;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+    text-align:center;
+
+    color:#59647a;
+
+    font-size:12px;
+
+    margin-top:35px;
+
+    padding:20px 0 5px;
+}
+
+footer span{
+
+    display:inline-block;
+
+    margin-top:8px;
+
+    font-size:14px;
+
+    font-weight:700;
+
+    letter-spacing:.7px;
+
+    background:linear-gradient(
+        90deg,
+        #ffffff,
+        #8ee7ff,
+        #d7a1ff,
+        #ffffff
+    );
+
+    background-size:250%;
+
+    -webkit-background-clip:text;
+    background-clip:text;
+
+    color:transparent;
+
+    animation:
+        footerShine 5s linear infinite;
+
+}
+
+@keyframes footerShine{
+
+    0%{
+        background-position:0%;
+    }
+
+    100%{
+        background-position:250%;
+    }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:800px){
+
+    .workspace{
+        grid-template-columns:1fr;
+    }
+
+    .result{
+        grid-column:auto;
+    }
+
+    header{
+        margin-bottom:15px;
+    }
+
+    .status{
+        display:none;
+    }
+
+    .hero h2{
+        letter-spacing:-2px;
+    }
+
+    .hero{
+        margin:30px 0;
+    }
+
+    .card{
+        border-radius:24px;
+        padding:18px;
+    }
+
+    .result-box{
+        min-height:300px;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- LIQUID BACKGROUND -->
+
+<div class="blob one"></div>
+<div class="blob two"></div>
+<div class="blob three"></div>
+
+
+
+<div class="container">
+
+
+<!-- HEADER -->
+
+<header>
+
+    <div class="logo">
+
+        <div class="logo-icon">
+            ✦
+        </div>
+
+        <div>
+
+            <h1>Liquid AI</h1>
+
+            <span>
+                Creative Image Studio
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="status">
+        ● AI Studio Online
+    </div>
+
+</header>
+
+
+
+<!-- HERO -->
+
+<section class="hero">
+
+    <h2>
+        Create beyond limits.
+    </h2>
+
+    <p>
+        Upload an image, describe your idea and transform it
+        with AI. Simple, cinematic and completely creative.
+    </p>
+
+</section>
+
+
+
+<!-- WORKSPACE -->
+
+<div class="workspace">
+
+
+<!-- =========================
+     IMAGE UPLOAD
+========================= -->
+
+<div class="card">
+
+    <div class="card-title">
+
+        <h3>
+            🖼️ Your Image
+        </h3>
+
+        <span>
+            Optional
+        </span>
+
+    </div>
+
+
+    <label
+        class="upload"
+        id="uploadBox"
+    >
+
+        <input
+            type="file"
+            id="imageInput"
+            accept="image/*"
+        >
+
+
+        <div id="uploadContent">
+
+            <div class="upload-icon">
+                ◈
+            </div>
+
+            <p>
+                Drop your image here
+            </p>
+
+            <small>
+                or click to browse • JPG / PNG / WEBP
+            </small>
+
+        </div>
+
+    </label>
+
+
+
+    <div
+        class="preview"
+        id="preview"
+    >
+
+        <img
+            id="previewImage"
+        >
+
+
+        <label class="change">
+
+            Change image
+
+            <input
+                type="file"
+                id="changeInput"
+                accept="image/*"
+                style="display:none"
+            >
+
+        </label>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================
+     PROMPT
+========================= -->
+
+<div class="card">
+
+    <div class="card-title">
+
+        <h3>
+            ✦ Describe your vision
+        </h3>
+
+        <span>
+            AI Prompt
+        </span>
+
+    </div>
+
+
+    <div class="prompt-wrap">
+
+        <textarea
+            id="prompt"
+            placeholder="Tell AI what you want...
+
+Example:
+Change the background into a beautiful cinematic garden. Keep the person, face and clothes exactly the same."
+        ></textarea>
+
+    </div>
+
+
+
+    <!-- QUICK PROMPTS -->
+
+    <div class="chips">
+
+        <button
+            class="chip"
+            data-prompt="Change the background into a beautiful luxury garden. Keep the person exactly the same."
+        >
+            🌿 Garden
+        </button>
+
+
+        <button
+            class="chip"
+            data-prompt="Change the background into a cinematic city at night with beautiful lights."
+        >
+            🌃 City
+        </button>
+
+
+        <button
+            class="chip"
+            data-prompt="Make this image look cinematic and professional while keeping the subject unchanged."
+        >
+            🎬 Cinematic
+        </button>
+
+
+        <button
+            class="chip"
+            data-prompt="Transform this image into a beautiful realistic fantasy world."
+        >
+            ✨ Fantasy
+        </button>
+
+    </div>
+
+
+
+    <!-- GENERATE -->
+
+    <button
+        class="generate"
+        id="generateBtn"
+    >
+        ✨ Generate / Edit Image
+    </button>
+
+
+    <div id="status"></div>
+
+</div>
+
+
+
+<!-- =========================
+     RESULT
+========================= -->
+
+<div class="card result">
+
+    <div class="card-title">
+
+        <h3>
+            ✨ Creation
+        </h3>
+
+        <span>
+            AI Result
+        </span>
+
+    </div>
+
+
+
+    <div class="result-box">
+
+
+        <div
+            class="empty"
+            id="emptyResult"
+        >
+
+            <div class="empty-icon">
+                ◌
+            </div>
+
+            <p>
+                Your creation will appear here
+            </p>
+
+        </div>
+
+
+        <img
+            id="resultImage"
+        >
+
+    </div>
+
+
+
+    <div style="text-align:center;">
+
+        <a
+            id="downloadBtn"
+            class="download"
+            download="liquid-ai-image.png"
+        >
+            ↓ Download Creation
+        </a>
+
+    </div>
+
+</div>
+
+
+</div>
+
+
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer>
+
+    Liquid AI Studio • Create. Transform. Imagine.
+
+    <br>
+
+    <span>
+        Created by Gulshan ❤️
+    </span>
+
+</footer>
+
+
+</div>
+
+
+
+<script>
+
+
+/* =========================
+   ELEMENTS
+========================= */
+
+const imageInput =
+    document.getElementById("imageInput");
+
+const changeInput =
+    document.getElementById("changeInput");
+
+const uploadBox =
+    document.getElementById("uploadBox");
+
+const preview =
+    document.getElementById("preview");
+
+const previewImage =
+    document.getElementById("previewImage");
+
+const promptInput =
+    document.getElementById("prompt");
+
+const generateBtn =
+    document.getElementById("generateBtn");
+
+const status =
+    document.getElementById("status");
+
+const resultImage =
+    document.getElementById("resultImage");
+
+const emptyResult =
+    document.getElementById("emptyResult");
+
+const downloadBtn =
+    document.getElementById("downloadBtn");
+
+
+
+/* =========================
+   SHOW IMAGE
+========================= */
+
+function showImage(file){
+
+    if(!file){
+        return;
+    }
+
+
+    const url =
+        URL.createObjectURL(file);
+
+
+    previewImage.src =
+        url;
+
+
+    uploadBox.style.display =
+        "none";
+
+
+    preview.style.display =
+        "block";
+
+}
+
+
+
+/* =========================
+   MAIN IMAGE INPUT
+========================= */
+
+imageInput.addEventListener(
+    "change",
+    function(){
+
+        showImage(
+            imageInput.files[0]
+        );
+
+    }
+);
+
+
+
+/* =========================
+   CHANGE IMAGE
+========================= */
+
+changeInput.addEventListener(
+    "change",
+    function(){
+
+        if(!changeInput.files[0]){
+            return;
+        }
+
+
+        const dataTransfer =
+            new DataTransfer();
+
+
+        dataTransfer.items.add(
+            changeInput.files[0]
+        );
+
+
+        imageInput.files =
+            dataTransfer.files;
+
+
+        showImage(
+            changeInput.files[0]
+        );
+
+    }
+);
+
+
+
+/* =========================
+   QUICK PROMPTS
+========================= */
+
+document
+.querySelectorAll(".chip")
+.forEach(function(chip){
+
+    chip.addEventListener(
+        "click",
+        function(){
+
+            promptInput.value =
+                chip.dataset.prompt;
+
+
+            promptInput.focus();
+
+        }
+    );
+
+});
+
+
+
+/* =========================
+   GENERATE / EDIT
+========================= */
+
+generateBtn.addEventListener(
+    "click",
+    async function(){
+
+
+        const prompt =
+            promptInput.value.trim();
+
+
+        const imageFile =
+            imageInput.files[0];
+
+
+        /* PROMPT CHECK */
+
+        if(!prompt){
+
+            status.textContent =
+                "⚠️ पहले अपना prompt लिखो।";
+
+            promptInput.focus();
+
+            return;
+
+        }
+
+
+        /* LOADING */
+
+        generateBtn.disabled =
+            true;
+
+
+        generateBtn.textContent =
+            "◌ Creating magic...";
+
+
+        status.textContent =
+            imageFile
+            ? "AI आपकी image को transform कर रहा है..."
+            : "AI आपकी image create कर रहा है...";
+
+
+        resultImage.style.display =
+            "none";
+
+
+        emptyResult.style.display =
+            "block";
+
+
+        downloadBtn.style.display =
+            "none";
+
+
+
+        try{
+
+
+            /* FORM DATA */
+
+            const formData =
+                new FormData();
+
+
+            formData.append(
+                "prompt",
+                prompt
+            );
+
+
+            /* ADD IMAGE */
+
+            if(imageFile){
+
+                formData.append(
+                    "image",
+                    imageFile
+                );
+
+            }
+
+
+
+            /* SERVER REQUEST */
+
+            const response =
+                await fetch(
+                    "/api/generate",
+                    {
+                        method:"POST",
+                        body:formData
+                    }
+                );
+
+
+
+            /* RESPONSE */
+
+            const data =
+                await response.json();
+
+
+
+            if(!response.ok){
+
+                throw new Error(
+                    data.error ||
+                    "Image generation failed"
+                );
+
+            }
+
+
+
+            if(!data.image){
+
+                throw new Error(
+                    "AI ने कोई image return नहीं की।"
+                );
+
+            }
+
+
+
+            /* SHOW RESULT */
+
+            resultImage.src =
+                data.image;
+
+
+            resultImage.style.display =
+                "block";
+
+
+            emptyResult.style.display =
+                "none";
+
+
+
+            /* DOWNLOAD */
+
+            downloadBtn.href =
+                data.image;
+
+
+            downloadBtn.style.display =
+                "inline-block";
+
+
+
+            status.textContent =
+                "✓ Creation complete";
+
+
+
+        }
+        catch(error){
+
+            console.error(error);
+
+
+            status.textContent =
+                "❌ " + error.message;
+
+        }
+
+
+
+        /* RESET BUTTON */
+
+        generateBtn.disabled =
+            false;
+
+
+        generateBtn.textContent =
+            "✨ Generate / Edit Image";
+
+    }
+);
+
+</script>
+
+</body>
+</html>
+```
